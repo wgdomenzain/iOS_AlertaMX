@@ -329,8 +329,11 @@ UIActivityIndicatorView *spinnerStatus;
 
 - (IBAction)btnAddFamilyPressed:(id)sender
 {
+    NSLog(@"btnAddFamilyPressed");
     [self showStatus];
     mstrFamilyMobile = self.txtPhoneFamilyInitial.text;
+    [self.txtPhoneFamilyInitial resignFirstResponder];
+    
     [self.Declarations loadAddFamily];
     [self hideStatus];
     self.viewFamilyTable.hidden = NO;
@@ -352,9 +355,10 @@ UIActivityIndicatorView *spinnerStatus;
 
 - (IBAction)btnAddFamilyMenuPressed:(id)sender
 {
+    NSLog(@"btnAddFamilyMenuPressed");
     [UIView animateWithDuration:1.0f animations:^
     {
-        self.viewAddFamily.frame     = CGRectMake(0, self.viewAddFamily.frame.origin.y, self.viewAddFamily.frame.size.width, self.viewAddFamily.frame.size.height);
+        self.viewAddFamily.frame     = CGRectMake(20, self.viewAddFamily.frame.origin.y, self.viewAddFamily.frame.size.width, self.viewAddFamily.frame.size.height);
     }
     completion:^(BOOL completed)
      {}];
@@ -372,10 +376,26 @@ UIActivityIndicatorView *spinnerStatus;
      */
 }
 
-- (IBAction)btnAddFamilyMenuOKPressed:(id)sender {
+- (IBAction)btnAddFamilyMenuOKPressed:(id)sender
+{
+    [self showStatus];
+    mstrFamilyMobile = self.txtPhoneAddFamily.text;
+    [self.txtPhoneAddFamily resignFirstResponder];
+    [self.Declarations loadAddFamily];
+    [self hideStatus];
+    [self.tblFamily reloadData];
 }
 
-- (IBAction)btnCancelAddFamilyMenuPressed:(id)sender {
+- (IBAction)btnCancelAddFamilyMenuPressed:(id)sender
+{
+    NSLog(@"btnAddFamilyMenuPressed");
+    [self.txtPhoneAddFamily resignFirstResponder];
+    [UIView animateWithDuration:1.0f animations:^
+     {
+         self.viewAddFamily.frame     = CGRectMake(340, self.viewAddFamily.frame.origin.y, self.viewAddFamily.frame.size.width, self.viewAddFamily.frame.size.height);
+     }
+                     completion:^(BOOL completed)
+     {}];
 }
 
 //---------------------------------------------------------------------------------------------

@@ -9,10 +9,11 @@
 //
 
 #import "Alerts.h"
-#import "Declarations.h"
 #import "Welcome.h"
 #import "cellAlerts.h"
 #import "AlertDetails.h"
+#import "SBJson.h"
+#import "AppDelegate.h"
 
 NSMutableArray *records;
 
@@ -57,6 +58,7 @@ NSString    *strMap;
 {
     [super viewDidLoad];
     [self initViewController];
+    //[self.Declarations postRegister];
     [self loadXML];
 }
 
@@ -73,6 +75,8 @@ NSString    *strMap;
 {//-------------------------------------------------------------------------------
     //Google Analytics
     //self.screenName = nScreenNameAnalytics;
+    
+    self.Declarations = [[Declarations alloc] init];
     
     //Status Bar
     [[UIApplication sharedApplication] setStatusBarHidden:NO withAnimation:UIStatusBarAnimationSlide];
@@ -189,16 +193,19 @@ NSString    *strMap;
     {
         NSLog(@"selected s1_0");
         self.lblHelpDesc.text = @"Estoy bien";
+        mstrUserHelpType = @"2";
     }
     else if (image == [UIImage imageNamed:@"2_Trapped.png"])
     {
         NSLog(@"selected s1_1");
         self.lblHelpDesc.text = @"Estoy Atrapado";
+        mstrUserHelpType = @"1";
     }
     else if (image == [UIImage imageNamed:@"3_MedicalAid.png"])
     {
         NSLog(@"selected s1_2");
         self.lblHelpDesc.text = @"Estoy Lastimado";
+        mstrUserHelpType = @"3";
     }
     else
     {
@@ -250,7 +257,15 @@ NSString    *strMap;
     self.viewAlpha.hidden = YES;
 }
 
-- (IBAction)btnHelpAskPressed:(id)sender {
+- (IBAction)btnHelpAskPressed:(id)sender
+{
+    NSLog(@"btnHelpAskPressed");
+    [self.Declarations postSendAlert];
+    [UIView animateWithDuration:0.3f animations:^ {
+        self.viewAlerts.userInteractionEnabled   = TRUE;
+        self.viewHelp.frame                 = CGRectMake(self.viewHelp.frame.origin.x + 320, self.viewHelp.frame.origin.y, self.viewHelp.frame.size.width, self.viewHelp.frame.size.height);
+    }];
+    self.viewAlpha.hidden = YES;
 }
 /**********************************************************************************************
  XML

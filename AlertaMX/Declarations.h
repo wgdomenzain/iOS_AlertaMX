@@ -12,6 +12,7 @@
 #import "TBXML.h"
 #import "TBXML+HTTP.h"
 #import "TBXML+Compression.h"
+#import "SBJson.h"
 
 //Phone Memory
 #define     pmmaMsgID           @"pmmaMsgID"
@@ -210,6 +211,7 @@ int                         mintReqIndex;
 extern  NSDictionary        *mGeoJson[10];
 extern  NSDictionary        *mJSRegister;
 extern  NSDictionary        *mJSFamily;
+extern  NSDictionary        *mJSSendAlert;
 
 //NSMutableArray
 extern  NSMutableArray      *mmaAlertsCAPSNames;
@@ -230,6 +232,10 @@ extern  NSString            *mstrUserPushToken;
 extern  NSString            *mstrUserType;
 extern  NSString            *mstrUserID;
 extern  NSString            *mstrFamilyMobile;
+extern  NSString            *mstrUserHelpType;
+extern  NSString            *mstrUserLatitude;
+extern  NSString            *mstrUserLongitude;
+extern  NSString            *mstrSendAlert;
 
 //Storyboard
 extern  UIStoryboard        *mStoryboard;
@@ -250,5 +256,8 @@ extern  NSUserDefaults      *mUserDefaults;
 - (void) loadAddFamily;
 - (void) loadGetFamily;
 - (void) postGetFamily;
+- (void) postSendAlert;
+- (void) loadSendAlert;
+
 
 @end

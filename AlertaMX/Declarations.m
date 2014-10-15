@@ -110,6 +110,7 @@ int                 mintReqIndex;
 NSDictionary        *mGeoJson[10];
 NSDictionary        *mJSRegister;
 NSDictionary        *mJSFamily;
+NSDictionary        *mJSSendAlert;
 
 //NSMutableArray
 NSMutableArray      *mmaAlertsCAPSNames;
@@ -130,6 +131,10 @@ NSString            *mstrUserPushToken;
 NSString            *mstrUserType;
 NSString            *mstrUserID;
 NSString            *mstrFamilyMobile;
+NSString            *mstrUserHelpType;
+NSString            *mstrUserLatitude;
+NSString            *mstrUserLongitude;
+NSString            *mstrSendAlert;
 
 //Storyboard
 UIStoryboard        *mStoryboard;
@@ -241,7 +246,7 @@ NSUserDefaults      *mUserDefaults;
 //-------------------------------------------------------------------------------
 - (void) postRegister
 {
-    NSLog(@"postGetGeoJson");
+    NSLog(@"postRegister");
     NSOperationQueue *queue = [NSOperationQueue new];
     NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(loadRegister) object:nil];
     [queue addOperation:operation];
@@ -253,7 +258,7 @@ NSUserDefaults      *mUserDefaults;
     @try
     {
         NSString *post = [[NSString alloc] initWithFormat:@"mobile=%@&name=%@&pushToken=%@&type=%@", mstrUserMobile, mstrUserName, mstrUserPushToken, mstrUserType];
-        NSLog(@"postGetGeoJson: %@",post);
+        NSLog(@"postRegister: %@",post);
         NSURL *url = [NSURL URLWithString:@"http://ec2-54-68-158-184.us-west-2.compute.amazonaws.com/user/auth/register"];
         NSLog(@"URL postRegister = %@", url);
         NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
@@ -326,7 +331,7 @@ NSUserDefaults      *mUserDefaults;
     @try
     {
         NSString *post = [[NSString alloc] initWithFormat:@"userID=%@&mobile=%@", mstrUserID, mstrFamilyMobile];
-        NSLog(@"postGetGeoJson: %@",post);
+        NSLog(@"postAddFamily: %@",post);
         NSURL *url = [NSURL URLWithString:@"http://ec2-54-68-158-184.us-west-2.compute.amazonaws.com/add/family/member"];
         NSLog(@"URL postRegister = %@", url);
         NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
@@ -390,6 +395,7 @@ NSUserDefaults      *mUserDefaults;
         NSLog(@"PostFail");
     }
 }
+
 /*******************************************************************************
  4 Get Family
  *******************************************************************************/
@@ -408,7 +414,7 @@ NSUserDefaults      *mUserDefaults;
     @try
     {
         NSString *post = [[NSString alloc] initWithFormat:@"userID=%@", mstrUserID];
-        NSLog(@"postGetGeoJson: %@",post);
+        NSLog(@"postGetFamily: %@",post);
         NSURL *url = [NSURL URLWithString:@"http://ec2-54-68-158-184.us-west-2.compute.amazonaws.com/get/family/members"];
         NSLog(@"URL postRegister = %@", url);
         NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
@@ -471,5 +477,67 @@ NSUserDefaults      *mUserDefaults;
     {
         NSLog(@"PostFail");
     }
+}
+
+/*******************************************************************************
+ 5 Send Alert
+ *******************************************************************************/
+//-------------------------------------------------------------------------------
+- (void) postSendAlert
+{
+    NSLog(@"postSendAlert");
+    NSOperationQueue *queue = [NSOperationQueue new];
+    NSInvocationOperation *operation = [[NSInvocationOperation alloc] initWithTarget:self selector:@selector(loadSendAlert) object:nil];
+    [queue addOperation:operation];
+}
+
+//-------------------------------------------------------------------------------
+- (void) loadSendAlert
+{
+    @try
+    {
+        NSString *post = [[NSString alloc] initWithFormat:@"userID=%@&type=%@&lat=%@&lng=%@", mstrUserID, mstrUserHelpType, mstrUserLatitude, mstrUserLongitude];
+        NSLog(@"postSendAlert: %@",post);
+        NSURL *url = [NSURL URLWithString:@"http://ec2-54-68-158-184.us-west-2.compute.amazonaws.com/send/alert"];
+        NSLog(@"URL postSendAlert = %@", url);
+        NSData *postData = [post dataUsingEncoding:NSUTF8StringEncoding allowLossyConversion:YES];
+        NSString *postLength = [NSString stringWithFormat:@"%lu", (unsigned long)[postData length]];
+        NSMutableURLRequest *request = [[NSMutableURLRequest alloc] init];
+        [request setURL:url];
+        [request setHTTPMethod:@"POST"];
+        [request setValue:postLength forHTTPHeaderField:@"Content-Length"];
+        [request setValue:@"application/json" forHTTPHeaderField:@"Accept"];
+        [request setValue:@"application/x-www-form-urlencoded" forHTTPHeaderField:@"Content-Type"];
+        [request setHTTPBody:postData];
+        [NSURLRequest requestWithURL:url];
+        NSError *error = [[NSError alloc] init];
+        NSHTTPURLResponse *response = nil;
+        NSData *urlData=[NSURLConnection sendSynchronousRequest:request returningResponse:&response error:&error];
+        //-------------------------------------------------------------------------------
+        if ([response statusCode] >=200 && [response statusCode] <300)
+        {
+            mstrSendAlert   = [[NSString alloc]initWithData:urlData encoding:NSUTF8StringEncoding];
+            mJSSendAlert    = [NSJSONSerialization JSONObjectWithData:urlData options:kNilOptions error:&error];
+        }
+        else
+        {
+            if (error)
+            {
+                NSLog(@"Error");
+                
+            }
+            else
+            {
+                NSLog(@"Conect Fail");
+            }
+        }
+        //-------------------------------------------------------------------------------
+    }
+    @catch (NSException * e)
+    {
+        NSLog(@"Exception");
+    }
+    
+    NSLog(@"mstrSendAlert%@", mstrSendAlert);
 }
 @end

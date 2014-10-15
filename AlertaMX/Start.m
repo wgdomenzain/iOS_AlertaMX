@@ -188,7 +188,7 @@ NSString        *strUserLocation = @"None";
          */
         
     }
-    
+    //mstrUserID = @"15";
     if (!(nil == [mUserDefaults objectForKey:pmstrUserID]) && !([@"" isEqual:[mUserDefaults objectForKey:pmstrUserID]]))
     {
         mstrUserID          = [mUserDefaults objectForKey:pmstrUserID];
@@ -524,6 +524,9 @@ NSString        *strUserLocation = @"None";
              strUserLocation = [[administrativeArea stringByAppendingString:@","] stringByAppendingString:countryCode];
              NSLog(@"gstrUserLocation = %@", strUserLocation);
          }
+         
+         mstrUserLatitude  = [NSString stringWithFormat:@"%f", self.locationManager.location.coordinate.latitude];
+         mstrUserLongitude = [NSString stringWithFormat:@"%f", self.locationManager.location.coordinate.longitude];
      }];
 }
 //-------------------------------------------------------------------------------

@@ -7,12 +7,16 @@
 //
 
 #import <UIKit/UIKit.h>
+#import "Declarations.h"
 #import "InfiniteScrollPicker.h"
 #import <QuartzCore/QuartzCore.h>
 #import <CoreText/CoreText.h>
 #import <MobileCoreServices/MobileCoreServices.h>
 
 @interface Alerts : UIViewController<UITableViewDelegate, UITableViewDataSource>
+
+//Variables
+@property (nonatomic,strong) Declarations   *Declarations;
 
 //Images
 @property (strong, nonatomic) IBOutlet UIButton *imgHelp;
